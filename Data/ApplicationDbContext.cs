@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using buisnessCase_trends3.Models;
 
 namespace buisnessCase_trends3.Data
 {
@@ -9,5 +10,6 @@ namespace buisnessCase_trends3.Data
             : base(options)
         {
         }
+        public DbSet<buisnessCase_trends3.Models.Task> Task { get; set; } = default!;
     }
 }
