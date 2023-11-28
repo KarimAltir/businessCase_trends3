@@ -56,7 +56,7 @@ namespace buisnessCase_trends3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TaskName,TaskDescription,Points")] Task task)
+        public async Task<IActionResult> Create([Bind("Id,TaskName,TaskDescription,Points")] Models.Task task)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace buisnessCase_trends3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TaskName,TaskDescription,Points")] Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TaskName,TaskDescription,Points")] Models.Task task)
         {
             if (id != task.Id)
             {
