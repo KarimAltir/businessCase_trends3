@@ -10,6 +10,9 @@ namespace buisnessCase_trends3.Data
             : base(options)
         {
         }
-        public DbSet<buisnessCase_trends3.Models.Task> Task { get; set; } = default!;
+
+        public DbSet<Models.Task> Task { get; set; } = default!;
+        public DbSet<User> Users { get; set; } = default!;
+        public DbSet<LeaderboardEntry> LeaderboardEntries { get; set; } = default!;
     }
 }
