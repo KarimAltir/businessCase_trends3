@@ -1,8 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model IEnumerable<buisnessCase_trends3.Models.Task>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    //generate a card for each task
+	@foreach (var item in Model)
+    {
+		<div class="card" style="width: 18rem;">
+			<div class="card-body">
+				<h5 class="card-title">@item.TaskName</h5>
+				<h6 class="card-subtitle mb-2 text-muted">@item.TaskDescription</h6>
+				<p class="card-text">@item.Points</p>
+				<a href="#" class="card-link">Card link</a>
+				<a href="#" class="card-link">Another link</a>
+			</div>
+		</div>
+	}
+
+
 </div>
