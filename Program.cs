@@ -40,6 +40,16 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+app.MapControllerRoute(
+    name: "LeaderboardRoute",
+    pattern: "leaderboard",
+    defaults: new
+    {
+        controller = "Leaderboard",
+        action = "Show"
+    }
+);
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
