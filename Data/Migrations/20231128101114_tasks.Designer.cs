@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using buisnessCase_trends3.Data;
 
@@ -11,9 +12,11 @@ using buisnessCase_trends3.Data;
 namespace buisnessCase_trends3.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128101114_tasks")]
+    partial class tasks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,29 +226,6 @@ namespace buisnessCase_trends3.Data.Migrations
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
-                
-            modelBuilder.Entity("buisnessCase_trends3.Models.LeaderboardEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("LeaderboardEntries");
-                });
-
 
             modelBuilder.Entity("buisnessCase_trends3.Models.Task", b =>
                 {
@@ -270,31 +250,6 @@ namespace buisnessCase_trends3.Data.Migrations
 
                     b.ToTable("Task");
                 });
-                
-            modelBuilder.Entity("buisnessCase_trends3.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
@@ -344,23 +299,6 @@ namespace buisnessCase_trends3.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("buisnessCase_trends3.Models.LeaderboardEntry", b =>
-                {
-                    b.HasOne("buisnessCase_trends3.Models.User", "User")
-                        .WithOne("LeaderboardEntry")
-                        .HasForeignKey("buisnessCase_trends3.Models.LeaderboardEntry", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("buisnessCase_trends3.Models.User", b =>
-                {
-                    b.Navigation("LeaderboardEntry")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

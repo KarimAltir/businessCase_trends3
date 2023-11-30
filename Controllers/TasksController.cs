@@ -10,6 +10,7 @@ using buisnessCase_trends3.Models;
 
 namespace buisnessCase_trends3.Controllers
 {
+    
     public class TasksController : Controller
     {
         private readonly ApplicationDbContext _context;
