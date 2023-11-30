@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using buisnessCase_trends3.Data;
 
@@ -11,9 +12,11 @@ using buisnessCase_trends3.Data;
 namespace buisnessCase_trends3.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128215222_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,7 +226,7 @@ namespace buisnessCase_trends3.Data.Migrations
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
-                
+
             modelBuilder.Entity("buisnessCase_trends3.Models.LeaderboardEntry", b =>
                 {
                     b.Property<int>("Id")
@@ -245,7 +248,6 @@ namespace buisnessCase_trends3.Data.Migrations
 
                     b.ToTable("LeaderboardEntries");
                 });
-
 
             modelBuilder.Entity("buisnessCase_trends3.Models.Task", b =>
                 {
@@ -270,7 +272,7 @@ namespace buisnessCase_trends3.Data.Migrations
 
                     b.ToTable("Task");
                 });
-                
+
             modelBuilder.Entity("buisnessCase_trends3.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -294,7 +296,6 @@ namespace buisnessCase_trends3.Data.Migrations
 
                     b.ToTable("Users");
                 });
-
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {

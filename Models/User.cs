@@ -15,9 +15,6 @@ namespace buisnessCase_trends3.Models
         public string Password { get; set; }
         public int Points { get; set; } = 0;
 
-        public int LastLeaderboardObtainedPoints { get; set; } = 0;
-        //client side
-        [NotMapped]
-        public int Rank { get; set; } = 0;
+        public LeaderboardEntry LeaderboardEntry { get; set; }
     }
 }
