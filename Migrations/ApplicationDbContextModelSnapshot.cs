@@ -8,7 +8,7 @@ using buisnessCase_trends3.Data;
 
 #nullable disable
 
-namespace buisnessCase_trends3.Data.Migrations
+namespace buisnessCase_trends3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -223,7 +223,7 @@ namespace buisnessCase_trends3.Data.Migrations
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
-                
+
             modelBuilder.Entity("buisnessCase_trends3.Models.LeaderboardEntry", b =>
                 {
                     b.Property<int>("Id")
@@ -246,7 +246,6 @@ namespace buisnessCase_trends3.Data.Migrations
                     b.ToTable("LeaderboardEntries");
                 });
 
-
             modelBuilder.Entity("buisnessCase_trends3.Models.Task", b =>
                 {
                     b.Property<int>("Id")
@@ -254,6 +253,9 @@ namespace buisnessCase_trends3.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Completed")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Points")
                         .HasColumnType("int");
@@ -266,11 +268,16 @@ namespace buisnessCase_trends3.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Task");
                 });
-                
+
             modelBuilder.Entity("buisnessCase_trends3.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -294,7 +301,6 @@ namespace buisnessCase_trends3.Data.Migrations
 
                     b.ToTable("Users");
                 });
-
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
@@ -354,6 +360,15 @@ namespace buisnessCase_trends3.Data.Migrations
                         .HasForeignKey("buisnessCase_trends3.Models.LeaderboardEntry", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("buisnessCase_trends3.Models.Task", b =>
+                {
+                    b.HasOne("buisnessCase_trends3.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

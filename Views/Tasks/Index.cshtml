@@ -7,17 +7,60 @@
 <h1>Tasks</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" href="#" role="button">Create New</a>
 </p>
+<br />
 @* generate a card for each task  *@
-@foreach (var item in Model)
-{
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">@item.TaskName</h5>
-            <h6 class="card-subtitle mb-2 text-muted">@item.TaskDescription</h6>
-            <p class="card-text">@("Reward: " + @item.Points + " points")</p>
-            <a asp-action="Delete" asp-route-id="@item.Id" class="card-link">Delete</a>
-        </div>
+
+
+<form asp-action="Index" method="post">
+    <div class="form-group">
+        <label for="selectedUserId">Select User:</label>
+        
+        <select name="selectedUserId" class="form-control" onchange="this.form.submit()">
+            <option value="">All Users</option>
+            @foreach (var user in ViewBag.Users as List<buisnessCase_trends3.Models.User>)
+            {
+                <option value="@user.Id" selected="@Equals(user.Id, ViewBag.SelectedUserId)">@user.Username</option>
+
+            }
+        </select>
+
     </div>
+</form>
+<br />
+
+<br />
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <div class="card" >
+            <div class="card-body">
+                <h5 class="card-title">@item.TaskName</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@item.TaskDescription</h6>
+                <p class="card-text">@("Reward: " + @item.Points + " points")</p>
+
+                <div style="display:flex">
+                    <a asp-action="Delete" class="btn btn-primary" style="background-color: red; margin:1rem" asp-route-id="@item.Id" class="card-link">Delete</a>
+                    <a asp-action="Edit" class="btn btn-primary" style="background-color: orange; margin:1rem" asp-route-id="@item.Id" class="card-link">Edit</a>
+
+
+                @if (item.UserId == null && item.Completed != true)
+                {
+                     <form style="margin:1rem"  asp-action="Complete" method="post">
+                        <input type="hidden" name="taskId" value="@item.Id" />
+                        <input type="hidden" name="userId" value="@ViewBag.SelectedUserId" />
+                        <button type="submit" class="btn btn-primary" style="background-color: green;">Complete</button>
+                    </form>
+                }
+                </div>
+
+            </div>
+        </div>
+        
+        <br />
+
+    }
 }
