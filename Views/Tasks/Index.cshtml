@@ -7,17 +7,45 @@
 <h1>Tasks</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
-@* generate a card for each task  *@
-@foreach (var item in Model)
-{
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">@item.TaskName</h5>
-            <h6 class="card-subtitle mb-2 text-muted">@item.TaskDescription</h6>
-            <p class="card-text">@("Reward: " + @item.Points + " points")</p>
-            <a asp-action="Delete" asp-route-id="@item.Id" class="card-link">Delete</a>
-        </div>
+
+<form asp-action="Index">
+    <div class="form-group">
+        <label for="SelectedUserId">Select the user</label>
+        <select name="SelectedUserId" class="form-control" asp-items="ViewBag.UsersList" onchange="this.form.submit()">
+            <option disabled="disabled" selected="selected">-- Select user --</option>
+        </select>
     </div>
-}
+</form>
+
+<hr/>
+
+<div class="container">
+    @* generate a card for each task  *@
+    @if (Model.Any())
+    {
+        <h3>@("Remaining tasks (" + Model.Count() + ")")</h3>
+    }
+
+    @foreach (var item in Model)
+    {
+        <div class="card my-3 bg-light">
+            <div class="card-body">
+                <h5 class="card-title">@item.TaskName</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@item.TaskDescription</h6>
+                <p class="card-text mb-2 fw-bold" style="color: #00edcd">@("Reward: " + @item.Points + " points")</p>
+
+                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" class="btn btn btn-warning btn-sm" asp-route-id="@item.Id">Edit</a>
+
+                <form asp-action="Complete" method="post">
+                    <input type="hidden" name="taskId" value="@item.Id" />
+                    <input type="hidden" name="userId" value="@ViewBag.SelectedUserId" />
+
+                    <button type="submit" class="btn btn-success mx-3" style="float: right">Complete</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>

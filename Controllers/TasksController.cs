@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using buisnessCase_trends3.Data;
 using buisnessCase_trends3.Models;
+using Task = buisnessCase_trends3.Models.Task;
 
 namespace buisnessCase_trends3.Controllers
 {
@@ -21,11 +22,31 @@ namespace buisnessCase_trends3.Controllers
         }
 
         // GET: Tasks
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? SelectedUserId)
         {
-              return _context.Task != null ? 
-                          View(await _context.Task.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Task'  is null.");
+
+            if (!SelectedUserId.HasValue)
+            {
+                ViewBag.UsersList = new SelectList(_context.Users, "Id", "Username");
+                return View(new List<Task>());
+            }
+
+            User currentUser = _context.Users
+                .Include(u => u.CompletedTasks)
+                .FirstOrDefault(u => u.Id == SelectedUserId);
+
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            ViewBag.UsersList = new SelectList(_context.Users, "Id", "Username", currentUser.Id);
+            ViewBag.SelectedUserId = currentUser.Id;
+
+            List<Task> tasks = await _context.Task
+                .Where(t => !currentUser.CompletedTasks.Contains(t))
+                .ToListAsync();
+
+            return View(tasks);
         }
 
         // GET: Tasks/Details/5
@@ -159,6 +180,33 @@ namespace buisnessCase_trends3.Controllers
         private bool TaskExists(int id)
         {
           return (_context.Task?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Complete(int taskId, int userId)
+        {
+
+            var task = await _context.Task.FindAsync(taskId);
+            var user = await _context.Users.Include(u => u.LeaderboardEntry)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (task == null && user == null)
+            {
+                return NotFound();
+            }
+
+            if (user.CompletedTasks.Contains(task))
+            {
+                return BadRequest("User has already completed this task.");
+            }
+
+            user.Points += task.Points;
+            user.LeaderboardEntry.Points += task.Points;
+            user.CompletedTasks.Add(task);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

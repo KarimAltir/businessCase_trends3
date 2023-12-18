@@ -3,6 +3,19 @@
     ViewData["Title"] = "Leaderboard";
 }
 
+@functions {
+    Random random = new Random();
+
+    string GetRandomColor()
+    {
+        int red = random.Next(0, 256);
+        int green = random.Next(0, 256);
+        int blue = random.Next(0, 256);
+
+        return $"rgb({red},{green},{blue})";
+    }
+}
+
 <h1>Leaderboard</h1>
 <table class="table table-striped table-hover">
     <thead class="thead-dark">            
@@ -16,7 +29,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Rank</td>
+                <td class="fw-bolder" style="color: @GetRandomColor()">@item.Rank</td>
                 <td>@item.User.Username</td>
                 <td>@item.Points</td>
             </tr>

@@ -12,9 +12,5 @@ namespace buisnessCase_trends3.Models
         public string TaskName { get; set; }
         public string TaskDescription { get; set; }
         public int Points { get; set; }
-
-        public Task()
-        {
-        }
     }
 }
