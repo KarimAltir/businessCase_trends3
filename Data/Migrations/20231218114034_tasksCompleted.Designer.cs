@@ -9,11 +9,11 @@ using buisnessCase_trends3.Data;
 
 #nullable disable
 
-namespace buisnessCase_trends3.Migrations
+namespace buisnessCase_trends3.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231218001516_add tasks")]
-    partial class addtasks
+    [Migration("20231218114034_tasksCompleted")]
+    partial class tasksCompleted
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,9 +257,6 @@ namespace buisnessCase_trends3.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool?>("Completed")
-                        .HasColumnType("bit");
-
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
@@ -369,15 +366,15 @@ namespace buisnessCase_trends3.Migrations
 
             modelBuilder.Entity("buisnessCase_trends3.Models.Task", b =>
                 {
-                    b.HasOne("buisnessCase_trends3.Models.User", "User")
-                        .WithMany()
+                    b.HasOne("buisnessCase_trends3.Models.User", null)
+                        .WithMany("CompletedTasks")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("buisnessCase_trends3.Models.User", b =>
                 {
+                    b.Navigation("CompletedTasks");
+
                     b.Navigation("LeaderboardEntry")
                         .IsRequired();
                 });

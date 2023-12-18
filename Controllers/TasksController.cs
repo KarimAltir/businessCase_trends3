@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using buisnessCase_trends3.Data;
 using buisnessCase_trends3.Models;
-
+using Task = buisnessCase_trends3.Models.Task;
 
 namespace buisnessCase_trends3.Controllers
 {
-
+    
     public class TasksController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,45 +21,32 @@ namespace buisnessCase_trends3.Controllers
             _context = context;
         }
 
-        
-
-
         // GET: Tasks
-        public async Task<IActionResult> Index(int? selectedUserId)
+        public async Task<IActionResult> Index(int? SelectedUserId)
         {
-            ViewBag.Users = await _context.Users.ToListAsync();
 
-            if (selectedUserId.HasValue)
+            if (!SelectedUserId.HasValue)
             {
-                ViewBag.SelectedUserId = selectedUserId.Value;
-
-                var tasks = await _context.Task
-                    .Where(t => t.UserId == selectedUserId || t.UserId == null)
-                    .Include(t => t.User)
-                    .ToListAsync();
-
-                return View(tasks);
+                ViewBag.UsersList = new SelectList(_context.Users, "Id", "Username");
+                return View(new List<Task>());
             }
 
-            ViewBag.SelectedUserId = null;
+            User currentUser = _context.Users
+                .Include(u => u.CompletedTasks)
+                .FirstOrDefault(u => u.Id == SelectedUserId);
 
-            var allTasks = await _context.Task.Include(t => t.User).ToListAsync();
-            return View(allTasks);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            ViewBag.UsersList = new SelectList(_context.Users, "Id", "Username", currentUser.Id);
+            ViewBag.SelectedUserId = currentUser.Id;
 
+            List<Task> tasks = await _context.Task
+                .Where(t => !currentUser.CompletedTasks.Contains(t))
+                .ToListAsync();
 
-
-            //try
-            //{
-            //    return View(await _context.Task.ToListAsync());
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"Error en la acción Index: {ex}");
-            //    throw;
-            //}
-
-            //ViewBag.Users = await _context.Users.ToListAsync();
-            //return View(await _context.Task.ToListAsync());
+            return View(tasks);
         }
 
         // GET: Tasks/Details/5
@@ -83,8 +70,6 @@ namespace buisnessCase_trends3.Controllers
         // GET: Tasks/Create
         public IActionResult Create()
         {
-
-
             return View();
         }
 
@@ -93,27 +78,15 @@ namespace buisnessCase_trends3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TaskName,TaskDescription,Points,UserId,Completed")] Models.Task task)
+        public async Task<IActionResult> Create([Bind("Id,TaskName,TaskDescription,Points")] Models.Task task)
         {
-            task.UserId = null;
-            task.Completed = false;
-
-            Console.WriteLine("hay un error");
-
             if (ModelState.IsValid)
             {
                 _context.Add(task);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine($"Model error: {error.ErrorMessage}");
-                }
-                return View(task);
-            }
+            return View(task);
         }
 
         // GET: Tasks/Edit/5
@@ -199,38 +172,41 @@ namespace buisnessCase_trends3.Controllers
             {
                 _context.Task.Remove(task);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TaskExists(int id)
         {
-            return (_context.Task?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Task?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Complete(int taskId, int userId)
         {
-            
-                var task = await _context.Task.FindAsync(taskId);
-                var user = await _context.Users.FindAsync(userId);
 
-                if (task != null && user != null && (task.Completed == null || task.Completed == false))
+            var task = await _context.Task.FindAsync(taskId);
+            var user = await _context.Users.Include(u => u.LeaderboardEntry)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-                {
-                    task.Completed = true;
-                    task.UserId = userId;
-                    user.Points += task.Points;
-                    await _context.SaveChangesAsync();
-                }
-
-                return RedirectToAction(nameof(Index));
+            if (task == null && user == null)
+            {
+                return NotFound();
             }
-            
 
+            if (user.CompletedTasks.Contains(task))
+            {
+                return BadRequest("User has already completed this task.");
+            }
 
+            user.Points += task.Points;
+            user.LeaderboardEntry.Points += task.Points;
+            user.CompletedTasks.Add(task);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
-
+}

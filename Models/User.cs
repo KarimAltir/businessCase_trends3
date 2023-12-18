@@ -16,5 +16,7 @@ namespace buisnessCase_trends3.Models
         public int Points { get; set; } = 0;
 
         public LeaderboardEntry LeaderboardEntry { get; set; }
+
+        public ICollection<Task> CompletedTasks { get; set; } = new List<Task>();
     }
 }
