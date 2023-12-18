@@ -2,6 +2,8 @@
 using buisnessCase_trends3.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace buisnessCase_trends3.Controllers
 {
@@ -14,25 +16,19 @@ namespace buisnessCase_trends3.Controllers
             _context = context;
         }
 
-        public List<LeaderboardEntry> CalculateRanks(List<LeaderboardEntry> _entries)
+        public IActionResult Show()
         {
-            List<LeaderboardEntry> entries = _entries.OrderByDescending(e => e.Points).ToList();
+            List<LeaderboardEntry> rankedEntries = _context.LeaderboardEntries
+                .Include(u => u.User)
+                .OrderByDescending(e => e.User.Points)
+                .ToList();
 
             int rank = 1;
-            foreach (var entry in entries)
+            foreach (var entry in rankedEntries)
             {
                 entry.Rank = rank;
                 rank++;
             }
-
-            return entries;
-        }
-
-        public IActionResult Show()
-        {
-            List<LeaderboardEntry> rankedEntries = CalculateRanks(_context.LeaderboardEntries
-                .Include(u => u.User)
-                .ToList());
 
             return View(rankedEntries);
         }
