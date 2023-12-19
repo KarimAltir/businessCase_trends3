@@ -56,5 +56,7 @@ namespace buisnessCase_trends3.Data
                 context.SaveChanges();
             }
         }
+
+        public DbSet<buisnessCase_trends3.Models.Achievement> Achievement { get; set; } = default!;
     }
 }

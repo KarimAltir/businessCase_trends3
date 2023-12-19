@@ -18,5 +18,7 @@ namespace buisnessCase_trends3.Models
         public LeaderboardEntry LeaderboardEntry { get; set; }
 
         public ICollection<Task> CompletedTasks { get; set; } = new List<Task>();
+
+        public ICollection<Achievement> Achievements { get; set; } = new List<Achievement>();
     }
 }
