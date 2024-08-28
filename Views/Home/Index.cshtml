@@ -2,7 +2,122 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center my-5">
+    <h1 class="display-3">Welcome to Kanban Quest!</h1>
+    <p class="lead">Embark on a thrilling journey to master project management with our gamified Kanban board.</p>
+    <p>Track your progress, complete tasks, and climb the leaderboard as you enhance your productivity and earn achievements.</p>
 </div>
+
+<div class="container">
+    <h2 class="text-center my-4">Current Leaderboard</h2>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered leaderboard-table">
+            <thead class="thead-custom">
+                <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example static data, replace with dynamic data from the database -->
+                <tr>
+                    <th scope="row" class="rank-1">1</th>
+                    <td>JohnDoe</td>
+                    <td>777</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="rank-2">2</th>
+                    <td>JaneDoe</td>
+                    <td>500</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="rank-3">3</th>
+                    <td>JohnSmith</td>
+                    <td>90</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="rank-4">4</th>
+                    <td>JaneSmith</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="rank-5">5</th>
+                    <td>MikeSmith</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .display-3 {
+        font-size: 3rem;
+        font-weight: 300;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        font-weight: 300;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1; /* Light gray on hover */
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f8f9fa; /* Light gray for odd rows */
+    }
+
+    .thead-custom {
+        background-color: #007bff; /* Bright blue background */
+        color: #ffffff; /* White text color */
+    }
+
+    .table-bordered th, .table-bordered td {
+        border: 2px solid #dee2e6; /* Thicker border */
+    }
+
+    .leaderboard-table th {
+        font-size: 1.1rem;
+    }
+
+    .leaderboard-table td {
+        font-size: 1rem;
+    }
+
+    .rank-1 {
+        color: #FFD700; /* Gold */
+        font-size: 2.5rem; /* Largest size */
+        font-weight: bold;
+    }
+
+    .rank-2 {
+        color: #C0C0C0; /* Silver */
+        font-size: 2rem; /* Slightly smaller */
+        font-weight: bold;
+    }
+
+    .rank-3 {
+        color: #cd7f32; /* Bronze */
+        font-size: 1.75rem; /* Smaller */
+        font-weight: bold;
+    }
+
+    .rank-4 {
+        color: #6c757d; /* Dark gray */
+        font-size: 1.5rem; /* Smaller */
+        font-weight: bold;
+    }
+
+    .rank-5 {
+        color: #adb5bd; /* Light gray */
+        font-size: 1.25rem; /* Smallest size */
+        font-weight: bold;
+    }
+
+    .table-responsive {
+        overflow-x: auto; /* Allow horizontal scroll on small screens */
+    }
+</style>

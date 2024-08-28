@@ -15,6 +15,18 @@ namespace buisnessCase_trends3.Data
         public DbSet<Task> Task { get; set; } = default!;
         public DbSet<User> Users { get; set; } = default!;
         public DbSet<LeaderboardEntry> LeaderboardEntries { get; set; } = default!;
+        public DbSet<Achievement> Achievements { get; set; } = default!;
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.LeaderboardEntry)
+                .WithOne(l => l.User)
+                .HasForeignKey<LeaderboardEntry>(l => l.UserId);
+
+            // Add more configurations as needed
+        }
 
         public static void DataInitializer(ApplicationDbContext context)
         {
@@ -32,10 +44,23 @@ namespace buisnessCase_trends3.Data
                 context.Users.AddRange(users);
                 context.SaveChanges();
             }
-
-            if (!context.Task.Any())
+            if (!context.Achievements.Any())
             {
-                List<Models.Task> tasks = new()
+                List<Achievement> achievements = new()
+                {
+                    new() { Name = "Bug Fixer", Description = "Fix 10 bugs", Points = 50 },
+                    new() { Name = "Code Navigator", Description = "Navigate through complex code", Points = 75 },
+                    new() { Name = "Performance Expert", Description = "Optimize critical application functions", Points = 100 },
+                    new() { Name = "Testing Master", Description = "Write comprehensive unit tests", Points = 80 },
+                    new() { Name = "Deployment Specialist", Description = "Successfully deploy an application", Points = 90 }
+                };
+
+                context.Achievements.AddRange(achievements);
+                context.SaveChanges();
+
+                if (!context.Task.Any())
+                {
+                    List<Models.Task> tasks = new()
                 {
                     new () { TaskName = "Defeat the Bug Monster", TaskDescription = "Find and fix all bugs in the code.", Points = 50 },
                     new () { TaskName = "Solve the Debugging Maze", TaskDescription = "Navigate through the code maze and find the solution to a specific problem.", Points = 55 },
@@ -52,11 +77,12 @@ namespace buisnessCase_trends3.Data
                     new () { TaskName = "Explore the Forest of Continuous Learning", TaskDescription = "Dedicate time to learning a new technology or skill.", Points = 11 }
                 };
 
-                context.Task.AddRange(tasks);
-                context.SaveChanges();
+                    context.Task.AddRange(tasks);
+                    context.SaveChanges();
+                }
             }
         }
 
-        public DbSet<buisnessCase_trends3.Models.Achievement> Achievement { get; set; } = default!;
+
     }
 }

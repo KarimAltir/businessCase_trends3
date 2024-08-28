@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using buisnessCase_trends3.Data;
 using buisnessCase_trends3.Models;
 
-namespace buisnessCase_trends3.Controllers
+namespace buisnessCase_trends3
 {
     public class AchievementsController : Controller
     {
@@ -22,20 +22,20 @@ namespace buisnessCase_trends3.Controllers
         // GET: Achievements
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Achievement.Include(a => a.task);
-            return View(await applicationDbContext.ToListAsync());
+              return _context.Achievements != null ? 
+                          View(await _context.Achievements.ToListAsync()) :
+                          Problem("Entity set 'ApplicationDbContext.Achievements'  is null.");
         }
 
         // GET: Achievements/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Achievement == null)
+            if (id == null || _context.Achievements == null)
             {
                 return NotFound();
             }
 
-            var achievement = await _context.Achievement
-                .Include(a => a.task)
+            var achievement = await _context.Achievements
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (achievement == null)
             {
@@ -48,7 +48,6 @@ namespace buisnessCase_trends3.Controllers
         // GET: Achievements/Create
         public IActionResult Create()
         {
-            ViewData["TaskName"] = new SelectList(_context.Task, "TaskName", "TaskName");
             return View();
         }
 
@@ -57,7 +56,7 @@ namespace buisnessCase_trends3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,PointValue,TaskId")] Achievement achievement)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Points,IsClaimed")] Achievement achievement)
         {
             if (ModelState.IsValid)
             {
@@ -65,24 +64,22 @@ namespace buisnessCase_trends3.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskId"] = new SelectList(_context.Task, "Id", "Id", achievement.TaskId);
             return View(achievement);
         }
 
         // GET: Achievements/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Achievement == null)
+            if (id == null || _context.Achievements == null)
             {
                 return NotFound();
             }
 
-            var achievement = await _context.Achievement.FindAsync(id);
+            var achievement = await _context.Achievements.FindAsync(id);
             if (achievement == null)
             {
                 return NotFound();
             }
-            ViewData["TaskId"] = new SelectList(_context.Task, "Id", "Id", achievement.TaskId);
             return View(achievement);
         }
 
@@ -91,7 +88,7 @@ namespace buisnessCase_trends3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PointValue,TaskId")] Achievement achievement)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Points,IsClaimed")] Achievement achievement)
         {
             if (id != achievement.Id)
             {
@@ -118,20 +115,18 @@ namespace buisnessCase_trends3.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskId"] = new SelectList(_context.Task, "Id", "Id", achievement.TaskId);
             return View(achievement);
         }
 
         // GET: Achievements/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Achievement == null)
+            if (id == null || _context.Achievements == null)
             {
                 return NotFound();
             }
 
-            var achievement = await _context.Achievement
-                .Include(a => a.task)
+            var achievement = await _context.Achievements
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (achievement == null)
             {
@@ -146,14 +141,14 @@ namespace buisnessCase_trends3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Achievement == null)
+            if (_context.Achievements == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Achievement'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Achievements'  is null.");
             }
-            var achievement = await _context.Achievement.FindAsync(id);
+            var achievement = await _context.Achievements.FindAsync(id);
             if (achievement != null)
             {
-                _context.Achievement.Remove(achievement);
+                _context.Achievements.Remove(achievement);
             }
             
             await _context.SaveChangesAsync();
@@ -162,7 +157,7 @@ namespace buisnessCase_trends3.Controllers
 
         private bool AchievementExists(int id)
         {
-          return (_context.Achievement?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Achievements?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
